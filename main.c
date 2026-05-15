@@ -13,18 +13,18 @@
 #define YELLOW     14
 #define MAGENTA    13
 
-void window_size()
+void window_size()     // keeping window size fixed at 60 rows and 17 columns
 {
     SetConsoleTitle("Focus Timer By Reejul");
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    SMALL_RECT windowSize = {0, 0, 59, 16};  // 60 cols * 15 rows
+    SMALL_RECT windowSize = {0, 0, 59, 16};  
     COORD bufferSize = {60, 17};
     SetConsoleScreenBufferSize(hOut, bufferSize);
     SetConsoleWindowInfo(hOut, TRUE, &windowSize);
     HWND console = GetConsoleWindow();
     long style = GetWindowLong(console, GWL_STYLE);
-    style &= ~WS_MAXIMIZEBOX;
-    style &= ~WS_THICKFRAME;
+    style &= ~WS_MAXIMIZEBOX;    // bitwise to turn maximize button off
+    style &= ~WS_THICKFRAME;     // bitwise to disable window resizing 
     SetWindowLong(console, GWL_STYLE, style);
 }
 
@@ -85,7 +85,7 @@ void main_menu() 		// main menu
     SetConsoleTextAttribute(text_colour, WHITE);
     printf("\n\n\n\n\nVersion 1.0 (Made by Reejul Kant)");
     getch();
-    printf("\033[2J\033[H");		// for clearing console screen.
+    system("cls");		// for clearing console screen. Its not the best way but it's all I can do as of now.
 }
 
 void draw_mountains() 		//ASCII art for mountains when timer is running
@@ -163,15 +163,16 @@ int main(void)
 			{   
 				SetConsoleTextAttribute(text_colour, WHITE);
 				printf("\n Enter the time in format [HOURS:MINS]: ");
-				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) {
+				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) 
+				{
 					break;
-			}
-			else 
-			{ 
-		    	mciSendString("play enter from 0", NULL, 0, NULL);
-				SetConsoleTextAttribute(text_colour, LIGHT_RED);
-				printf("Invalid time. Enter it like 2:12, 0:30 etc. \n");
-				while (getchar() != '\n');
+			    }
+			    else 
+			    { 
+		    	    mciSendString("play enter from 0", NULL, 0, NULL);
+				    SetConsoleTextAttribute(text_colour, LIGHT_RED);
+				    printf("Invalid time. Enter it like 2:12, 0:30 etc. \n");
+				    while (getchar() != '\n');
 			}
 			}
 		
@@ -193,25 +194,26 @@ int main(void)
 			SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
 			for (i = sec; i >= 0; i--)		// loop for timer begins
 			{ 
-					
-			if (kbhit())		// will check for E input every second
-			{
-        		char key = _getch();
-        		if (key == 'E' || key == 'e') 
-				{
-            		break; 
-        		}
-    		}
+			    if (kbhit())		// will check for E input every second
+			    {
+        		    char key = _getch();
+        		    if (key == 'E' || key == 'e') 
+				    {
+            		    break; 
+        		    }
+    		    }
     		
     		// converting seconds into hh:mm:ss
 			final_hour = (i / 3600);
 			final_min = ((i % 3600) / 60);
 			final_sec = (i % 60);
 			
-			if (i <= 10) {
+			if (i <= 10) 
+			{
         		SetConsoleTextAttribute(text_colour, LIGHT_RED);
     		} 
-			else {
+			else 
+			{
         		SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
     		}
 				printf ("\rTime left: %02d:%02d:%02d", final_hour, final_min, final_sec);
