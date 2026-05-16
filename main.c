@@ -1,3 +1,10 @@
+/* 
+(c) Focus timer by Reejul Kant
+Please do not plagarise.
+
+This is a beginner C project..
+*/
+
 #include <stdio.h>
 #include <windows.h>
 #include <mmsystem.h>
@@ -13,18 +20,18 @@
 #define YELLOW     14
 #define MAGENTA    13
 
-void window_size()     // keeping window size fixed at 60 rows and 17 columns
+void window_size()
 {
     SetConsoleTitle("Focus Timer By Reejul");
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    SMALL_RECT windowSize = {0, 0, 59, 16};  
+    SMALL_RECT windowSize = {0, 0, 60, 17};  // setting the window size
     COORD bufferSize = {60, 17};
     SetConsoleScreenBufferSize(hOut, bufferSize);
     SetConsoleWindowInfo(hOut, TRUE, &windowSize);
     HWND console = GetConsoleWindow();
     long style = GetWindowLong(console, GWL_STYLE);
-    style &= ~WS_MAXIMIZEBOX;    // bitwise to turn maximize button off
-    style &= ~WS_THICKFRAME;     // bitwise to disable window resizing 
+    style &= ~WS_MAXIMIZEBOX;
+    style &= ~WS_THICKFRAME;
     SetWindowLong(console, GWL_STYLE, style);
 }
 
@@ -80,12 +87,12 @@ void main_menu() 		// main menu
     printf(" |_|  \\___/ \\___|\\__,_|___/    |_|  |_|_| |_| |_|\\___|_|   \n");
     printf("\n");
     SetConsoleTextAttribute(text_colour, GREEN);
-    printf("  [For Studying and Relaxation]\n\n");
-    printf("  Press any key to begin...");
+    printf("\t\t[For Studying and Relaxation]\n\n");
+    printf("\t\tPress any key to begin...");
     SetConsoleTextAttribute(text_colour, WHITE);
     printf("\n\n\n\n\nVersion 1.0 (Made by Reejul Kant)");
     getch();
-    system("cls");		// for clearing console screen. Its not the best way but it's all I can do as of now.
+    printf("\033[2J\033[H");		// for clearing console screen.
 }
 
 void draw_mountains() 		//ASCII art for mountains when timer is running
@@ -143,7 +150,7 @@ int main(void)
 		load_font_size(24);			// font size set to 24
 	
 		HANDLE text_colour = GetStdHandle(STD_OUTPUT_HANDLE);		// handle console text output
-		int bar, hour, min, sec, i, j, k, final_hour, final_min, final_sec;		// c89 mode doesn't let me declare variables in a loop
+		int bar, hour, min, sec, i, j, k, final_hour, final_min, final_sec;		// c89 mode doesnt let me declare variables in a loop
 		char again;		
 		
 		do		// when user wants to run the app again after time is up
@@ -153,7 +160,7 @@ int main(void)
 			audio(); 
 			mciSendString("play enter from 0", NULL, 0, NULL);
 		
-			for (bar = 0; bar <= 30; bar++) 		// loading bar animation
+			for (bar = 0; bar <= 30; bar++) 		// loading bar animation (pretty useless but looks cool)
 			{
 				printf ("=");
 				Sleep(20);		
@@ -163,16 +170,16 @@ int main(void)
 			{   
 				SetConsoleTextAttribute(text_colour, WHITE);
 				printf("\n Enter the time in format [HOURS:MINS]: ");
-				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) 
-				{
+				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) {
 					break;
-			    }
-			    else 
-			    { 
-		    	    mciSendString("play enter from 0", NULL, 0, NULL);
-				    SetConsoleTextAttribute(text_colour, LIGHT_RED);
-				    printf("Invalid time. Enter it like 2:12, 0:30 etc. \n");
-				    while (getchar() != '\n');
+			}
+			else 
+			{ 
+		    	mciSendString("play enter from 0", NULL, 0, NULL);
+		    	system("cls");
+				SetConsoleTextAttribute(text_colour, LIGHT_RED);
+				printf("Please enter valid time (eg. 2:12, 0:30 etc). \n");
+				while (getchar() != '\n');
 			}
 			}
 		
@@ -186,34 +193,34 @@ int main(void)
 			SetConsoleTextAttribute(text_colour, WHITE);
 			printf("\n\n Timer set for %d hours %d minutes.\n", hour, min);
 			SetConsoleTextAttribute(text_colour, YELLOW);
-			printf(" You can press E to exit the timer.\n\n");
-		
+			printf(" Press E to exit or click anywhere to pause the timer.");
+			
+			printf("\n\n");
 			draw_mountains();		// displays ASCII mountain art
 			hide_cursor(); 
 		
 			SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
 			for (i = sec; i >= 0; i--)		// loop for timer begins
 			{ 
-			    if (kbhit())		// will check for E input every second
-			    {
-        		    char key = _getch();
-        		    if (key == 'E' || key == 'e') 
-				    {
-            		    break; 
-        		    }
-    		    }
+					
+			if (kbhit())		// will check for E input every second
+			{
+        		char key = _getch();
+        		if (key == 'E' || key == 'e') 
+				{
+            		break; 
+        		}
+    		}
     		
     		// converting seconds into hh:mm:ss
 			final_hour = (i / 3600);
 			final_min = ((i % 3600) / 60);
 			final_sec = (i % 60);
 			
-			if (i <= 10) 
-			{
+			if (i <= 10) {
         		SetConsoleTextAttribute(text_colour, LIGHT_RED);
     		} 
-			else 
-			{
+			else {
         		SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
     		}
 				printf ("\rTime left: %02d:%02d:%02d", final_hour, final_min, final_sec);
@@ -227,7 +234,7 @@ int main(void)
         	system("cls");
         	show_cursor();
         	
-			SetConsoleTextAttribute(text_colour, MAGENTA);
+			SetConsoleTextAttribute(text_colour, CYAN);
 			mciSendString("play enter from 0", NULL, 0, NULL);
 			printf("\n Timer stopped at %02d:%02d:%02d\n\n", final_hour, final_min, final_sec);
 			SetConsoleTextAttribute(text_colour, WHITE);
