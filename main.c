@@ -1,8 +1,7 @@
 /* 
-(c) Focus timer by Reejul Kant
-Please do not plagarise.
+(c) Focus Timer by Reejul Kant
 
-This is a beginner C project..
+This is a beginner C project.. I have added a few comments explaining my code
 */
 
 #include <stdio.h>
@@ -20,12 +19,12 @@ This is a beginner C project..
 #define YELLOW     14
 #define MAGENTA    13
 
-void window_size()
+static void window_size()
 {
     SetConsoleTitle("Focus Timer By Reejul");
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    SMALL_RECT windowSize = {0, 0, 60, 17};  // setting the window size
-    COORD bufferSize = {60, 17};
+    SMALL_RECT windowSize = {0, 0, 55, 14};  // setting the window size
+    COORD bufferSize = {50, 17};
     SetConsoleScreenBufferSize(hOut, bufferSize);
     SetConsoleWindowInfo(hOut, TRUE, &windowSize);
     HWND console = GetConsoleWindow();
@@ -35,7 +34,7 @@ void window_size()
     SetWindowLong(console, GWL_STYLE, style);
 }
 
-void load_font_size(int size)		// resize console font
+static void load_font_size(int size)		// resize console font
 {	
     HANDLE text = GetStdHandle(STD_OUTPUT_HANDLE);   
     CONSOLE_FONT_INFOEX cfi;
@@ -49,7 +48,7 @@ void load_font_size(int size)		// resize console font
     SetCurrentConsoleFontEx(text, FALSE, &cfi);
 }
 
-void hide_cursor()		// to disable the blinking cursor
+static void hide_cursor()		// to disable the blinking cursor
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
@@ -58,7 +57,7 @@ void hide_cursor()		// to disable the blinking cursor
     SetConsoleCursorInfo(consoleHandle, &info);
 }
 
-void show_cursor()		// to enable the blinking cursor, only when taking inputs
+static void show_cursor()		// to enable the blinking cursor, only when taking inputs
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
@@ -67,35 +66,31 @@ void show_cursor()		// to enable the blinking cursor, only when taking inputs
     SetConsoleCursorInfo(consoleHandle, &info);
 }
 
-void audio()			// loads or opens the audio files located within main.c folder
+static void audio()			// loads or opens the audio files located within main.c folder
 {	
 	mciSendString("open \"enter.mp3\" type mpegvideo alias enter", NULL, 0, NULL);
 	mciSendString("open \"lofi.mp3\" type mpegvideo alias lofi", NULL, 0, NULL);
 	mciSendString("open \"rain.mp3\" type mpegvideo alias rain", NULL, 0, NULL);
 }
 
-void main_menu() 		// main menu
+static void main_menu()
 {    
 	HANDLE text_colour = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(text_colour, LIGHT_CYAN);
-    printf("\n");
-    printf("  ______                     _______ _                      \n");	// ASCII art for Focus Timer
-    printf(" |  ____|                   |__   __(_)                     \n");
-    printf(" | |__ ___   ___ _   _ ___     | |   _ _ __ ___   ___ _ __ \n");
-    printf(" |  __/ _ \\ / __| | | / __|    | |  | | '_ ` _ \\ / _ \\ '__|\n");
-    printf(" | | | (_) | (__| |_| \\__ \\    | |  | | | | | | |  __/ |   \n");
-    printf(" |_|  \\___/ \\___|\\__,_|___/    |_|  |_|_| |_| |_|\\___|_|   \n");
-    printf("\n");
-    SetConsoleTextAttribute(text_colour, GREEN);
-    printf("\t\t[For Studying and Relaxation]\n\n");
+    printf("\n\n");
+    printf("\t      ~-~-~-~-~-~-~-~-~-~-~-~-~-~\n");
+    printf("\t      ~-~-~-~ FOCUS TIMER ~-~-~-~\n");
+    printf("\t      ~-~-~-~-~-~-~-~-~-~-~-~-~-~\n");
+    SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
+    printf("\t     [For Studying and Relaxation]\n\n");
     printf("\t\tPress any key to begin...");
     SetConsoleTextAttribute(text_colour, WHITE);
-    printf("\n\n\n\n\nVersion 1.0 (Made by Reejul Kant)");
+    printf("\n\n\n\n\n\t    Version 1.1 (Made by Reejul Kant)");
     getch();
-    printf("\033[2J\033[H");		// for clearing console screen.
+    system("cls");		// for clearing console screen.
 }
 
-void draw_mountains() 		//ASCII art for mountains when timer is running
+static void draw_mountains() 		//ASCII art for mountains when timer is running
 {	
 	HANDLE text_colour = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(text_colour, GREEN);
@@ -110,17 +105,18 @@ void draw_mountains() 		//ASCII art for mountains when timer is running
     printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 }
 
-void music_selection()		// menu for selecting the audio or music
+static void music_selection()		// menu for selecting the audio or music
 {	
 	HANDLE text_colour = GetStdHandle(STD_OUTPUT_HANDLE);
 	
 	SetConsoleTextAttribute(text_colour, MAGENTA);
-	printf("\n ===== Select focus audio preference =====\n\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf(" Select focus audio preference\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
 	
 	SetConsoleTextAttribute(text_colour, LIGHT_CYAN);
-	printf(" [1] Peaceful music\n [2] Rain sounds\n [3] Music + Rain\n [4] No music\n");
+	printf(" [1] Peaceful music\n [2] Rain sounds\n [3] Music + Rain\n [4] No music \n ");
 	int music_choice = _getch();
-	mciSendString("play enter from 0", NULL, 0, NULL);
 	
 	system("cls");
 	if (music_choice == '1') 
@@ -136,11 +132,8 @@ void music_selection()		// menu for selecting the audio or music
 	else if (music_choice == '3') 
 	{
 		printf(" %c Playing peaceful music + rain sound %c", 14, 14);
-		mciSendString("play lofi from 0", NULL, 0, NULL);
+		mciSendString("play lofi repeat", NULL, 0, NULL);
 		mciSendString("play rain repeat", NULL, 0, NULL);
-	}
-	else 
-	{
 	}
 }
 
@@ -158,7 +151,6 @@ int main(void)
 			system("cls");
 			main_menu();
 			audio(); 
-			mciSendString("play enter from 0", NULL, 0, NULL);
 		
 			for (bar = 0; bar <= 30; bar++) 		// loading bar animation (pretty useless but looks cool)
 			{
@@ -166,24 +158,24 @@ int main(void)
 				Sleep(20);		
 			}
 		
-			while (true)		// setting infinite loop for invalid inputs
+			while(true)		// setting infinite loop for invalid inputs here
 			{   
 				SetConsoleTextAttribute(text_colour, WHITE);
 				printf("\n Enter the time in format [HOURS:MINS]: ");
-				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) {
+				if (scanf("%d:%d", &hour, &min) == 2 && hour >= 0 && min >= 0 && min < 60) 
+				{
 					break;
-			}
-			else 
-			{ 
-		    	mciSendString("play enter from 0", NULL, 0, NULL);
-		    	system("cls");
-				SetConsoleTextAttribute(text_colour, LIGHT_RED);
-				printf("Please enter valid time (eg. 2:12, 0:30 etc). \n");
-				while (getchar() != '\n');
-			}
+				}
+				else 
+				{ 
+		    		mciSendString("play enter from 0", NULL, 0, NULL);
+		    		system("cls");
+					SetConsoleTextAttribute(text_colour, LIGHT_RED);
+					printf("Please enter valid time (eg. 2:12, 0:30 etc). \n");
+					while (getchar() != '\n');
+				}
 			}
 		
-			mciSendString("play enter from 0", NULL, 0, NULL);
 			sec = ((hour * 3600) + (min * 60));		// converting hh:mm to seconds
 		
 			system("cls");
@@ -192,7 +184,7 @@ int main(void)
 		
 			SetConsoleTextAttribute(text_colour, WHITE);
 			printf("\n\n Timer set for %d hours %d minutes.\n", hour, min);
-			SetConsoleTextAttribute(text_colour, YELLOW);
+			SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
 			printf(" Press E to exit or click anywhere to pause the timer.");
 			
 			printf("\n\n");
@@ -221,9 +213,9 @@ int main(void)
         		SetConsoleTextAttribute(text_colour, LIGHT_RED);
     		} 
 			else {
-        		SetConsoleTextAttribute(text_colour, LIGHT_BLUE);
+        		SetConsoleTextAttribute(text_colour, LIGHT_CYAN);
     		}
-				printf ("\rTime left: %02d:%02d:%02d", final_hour, final_min, final_sec);
+				printf ("\r Time left: %02d:%02d:%02d", final_hour, final_min, final_sec);
 				Sleep(1000);
 			}
 			
@@ -240,10 +232,8 @@ int main(void)
 			SetConsoleTextAttribute(text_colour, WHITE);
 			printf(" Would you like to set another timer? [Y/N]: ");
 			scanf(" %c", &again);
-			mciSendString("play enter from 0", NULL, 0, NULL);
-		
-		} 
-		while(again == 'Y' || again == 'y');		// program starts from beginning if Y key is entered
+			
+		} while(again == 'Y' || again == 'y');		// program starts from beginning if Y key is entered
 	
 	printf("\n Thank you for using Focus Timer!");
 	Sleep(1500);
